@@ -1,0 +1,39 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import SiteHome from '../../components/SiteHome.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import ReadingPage from '../../components/ReadingPage.astro';
+import ActivitiesPage from '../../components/ActivitiesPage.astro';
+import ActivityDetail from '../../components/ActivityDetail.astro';
+import ArchivePage from '../../components/ArchivePage.astro';
+import StampPage from '../../components/StampPage.astro';
+import PublicationsPage from '../../components/PublicationsPage.astro';
+import ContactPage from '../../components/ContactPage.astro';
+import SitemapPage from '../../components/SitemapPage.astro';
+import { languages, pages, publicSlugs } from '../../data/site';
+import { activities } from '../../data/foundation';
+import type { Lang } from '../../data/concepts';
+export function getStaticPaths() {
+  return languages.flatMap(lang => publicSlugs.map(slug => ({ params: { lang, page: slug || undefined } })));
+}
+const lang = Astro.params.lang as Lang;
+const slug = Astro.params.page || '';
+const meta = pages.find(page => page.slug === slug);
+const entry = slug.startsWith('activities/') ? activities.find(item => item.id === slug.slice(11)) : undefined;
+if (!meta && !entry) throw new Error('Unknown public page: ' + slug);
+const title = entry ? entry.title[lang] : meta!.title[lang];
+const description = entry ? entry.description[lang] : meta!.description[lang];
+const custom = ['', 'activities', 'archive', 'archive/isa-khan-stamp', 'publications', 'contact', 'sitemap'];
+---
+<SiteLayout lang={lang} slug={slug} title={title} description={description}>
+  {slug !== '' && <PageIntro lang={lang} slug={slug} title={title} description={description} />}
+  {slug === '' && <SiteHome lang={lang} />}
+  {entry && <ActivityDetail lang={lang} entry={entry} />}
+  {slug === 'activities' && <ActivitiesPage lang={lang} />}
+  {slug === 'archive' && <ArchivePage lang={lang} />}
+  {slug === 'archive/isa-khan-stamp' && <StampPage lang={lang} />}
+  {slug === 'publications' && <PublicationsPage lang={lang} />}
+  {slug === 'contact' && <ContactPage lang={lang} />}
+  {slug === 'sitemap' && <SitemapPage lang={lang} />}
+  {!entry && !custom.includes(slug) && <ReadingPage lang={lang} slug={slug} />}
+</SiteLayout>

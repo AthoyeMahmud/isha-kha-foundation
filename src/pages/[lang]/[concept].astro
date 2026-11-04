@@ -1,0 +1,14 @@
+---
+import ConceptLayout from '../../layouts/ConceptLayout.astro';
+import EditorialHome from '../../components/EditorialHome.astro';
+import ArchiveHome from '../../components/ArchiveHome.astro';
+import CommunityHome from '../../components/CommunityHome.astro';
+import { concepts, type Lang } from '../../data/concepts';
+export function getStaticPaths() {
+  return ['en', 'bn'].flatMap(lang => concepts.map(concept => ({ params: { lang, concept: concept.slug } })));
+}
+const { lang, concept } = Astro.params;
+const selected = concepts.find(c => c.slug === concept)!;
+const Home = concept === 'public-record' ? ArchiveHome : concept === 'shared-future' ? CommunityHome : EditorialHome;
+---
+<ConceptLayout lang={lang} concept={concept} title={selected[lang as Lang]}><Home lang={lang} /></ConceptLayout>

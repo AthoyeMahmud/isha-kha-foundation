@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import stamp from '../assets/isa-khan-stamp.jpg';
+const { lang = 'en', compact = false, eager = false } = Astro.props;
+const t = (en: string, bn: string) => lang === 'bn' ? bn : en;
+---
+<figure class:list={['archive-object', { compact }]}>
+  <div class="object-mount">
+    <Image src={stamp} alt={t('A Bangladesh postage stamp depicting Isa Khan, photographed in the supplied collection.', 'সরবরাহকৃত সংগ্রহে থাকা ঈশা খাঁর প্রতিকৃতিসংবলিত বাংলাদেশের ডাকটিকিটের আলোকচিত্র।')} widths={[320, 600, 900]} sizes={compact ? "(max-width: 700px) 70vw, 280px" : "(max-width: 700px) 70vw, 440px"} width={600} format="webp" loading={eager ? "eager" : "lazy"} />
+  </div>
+  <figcaption>{t('From the supplied collection', 'সরবরাহকৃত সংগ্রহ থেকে')}<span>{t('Isa Khan on a Bangladesh postage stamp', 'বাংলাদেশের ডাকটিকিটে ঈশা খাঁ')}</span></figcaption>
+</figure>
+<style>
+  figure { margin: 0; width: 100%; }
+  .object-mount { background: var(--paper); padding: clamp(1.2rem, 3vw, 2.8rem); }
+  img { width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block; }
+  figcaption { font-size: .72rem; line-height: 1.6; padding-top: 1rem; color: inherit; }
+  figcaption span { display: block; opacity: .8; }
+  .compact img { max-height: 310px; }
+  .compact .object-mount { padding: 1rem; }
+</style>

@@ -1,0 +1,8 @@
+---
+import type { Lang } from '../data/concepts';
+import { pages, groupNames, pathFor } from '../data/site';
+import { activities } from '../data/foundation';
+const { lang } = Astro.props as { lang: Lang };
+const groups = ['home', 'foundation', 'heritage', 'activities', 'archive', 'documents', 'contact', 'information'];
+---
+<div class="sitemap-grid site-wrap">{groups.map(group => <section class="sitemap-group"><h2>{groupNames[group][lang]}</h2><ul>{pages.filter(page => page.group === group).map(page => <li><a href={pathFor(lang, page.slug)}>{page.title[lang]}</a>{page.slug === 'activities' && <ul>{activities.map(entry => <li><a href={pathFor(lang, 'activities/' + entry.id)}>{entry.title[lang]}</a></li>)}</ul>}</li>)}</ul></section>)}</div>

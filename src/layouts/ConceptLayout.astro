@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import { concepts, type Lang } from '../data/concepts';
+const { lang = 'en', concept = 'living-heritage', title } = Astro.props;
+const t = (en: string, bn: string) => lang === 'bn' ? bn : en;
+const navigation = [
+  ['foundation', 'Foundation', 'ফাউন্ডেশন'], ['heritage', 'Heritage', 'ঐতিহ্য'],
+  ['activities', 'Activities', 'কার্যক্রম'], ['archive', 'Archive', 'সংগ্রহশালা'],
+  ['documents', 'Documents', 'নথিপত্র'], ['contact', 'Contact', 'যোগাযোগ'],
+];
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={t('Homepage design study for Isha Kha Foundation. Bengal’s heritage, Isa Khan’s legacy, and a commitment to social and cultural life.', 'ঈশা খাঁ ফাউন্ডেশনের প্রস্তাবিত হোমপেজ। বাংলার ঐতিহ্য, ঈশা খাঁর উত্তরাধিকার এবং সামাজিক ও সাংস্কৃতিক অঙ্গীকার।')} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#173f35" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="en" href={`/en/${concept}/`} />
+    <link rel="alternate" hreflang="bn" href={`/bn/${concept}/`} />
+    <title>{title} · Isha Kha Foundation</title>
+  </head>
+  <body class={`concept-${concept}`}>
+    <a class="skip-link" href="#main">{t('Skip to content', 'মূল বিষয়বস্তুতে যান')}</a>
+    <aside class="study-bar" aria-label={t('Homepage design concepts', 'হোমপেজের নকশা প্রস্তাব')}>
+      <a class="study-label" href="/concepts/">{t('Homepage studies', 'হোমপেজের নকশা')}</a>
+      <nav aria-label={t('Compare concepts', 'নকশা তুলনা করুন')}>
+        {concepts.map((c, i) => <a href={`/${lang}/${c.slug}/`} aria-current={concept === c.slug ? 'page' : undefined}><span class="study-number">{i + 1}</span> {c[lang as Lang]}</a>)}
+      </nav>
+      <span class="study-status">{t('Design preview', 'প্রস্তাবিত নকশা')}</span>
+    </aside>
+    <header class="site-header wrap">
+      <a class="brand" href={`/${lang}/${concept}/`} aria-label={t('Isha Kha Foundation home', 'ঈশা খাঁ ফাউন্ডেশনের হোমপেজ')}>
+        <span class="brand-symbol" aria-hidden="true">ঈ</span>
+        <span><strong>{t('Isha Kha Foundation', 'ঈশা খাঁ ফাউন্ডেশন')}</strong><small lang="en">Isa Khan alias Isha Kha Foundation</small></span>
+      </a>
+      <div class="header-right">
+        <a class="language" href={`/${lang === 'en' ? 'bn' : 'en'}/${concept}/`} lang={lang === 'en' ? 'bn' : 'en'} hreflang={lang === 'en' ? 'bn' : 'en'} aria-label={t('Read this concept in Bangla', 'এই নকশা ইংরেজিতে পড়ুন')}>{t('বাংলা', 'English')} <span aria-hidden="true">↗</span></a>
+        <nav class="desktop-navigation" aria-label={t('Main navigation', 'প্রধান নেভিগেশন')}>
+          {navigation.map(([id, en, bn]) => <a href={`#${id}`}>{t(en, bn)}</a>)}
+        </nav>
+        <details class="navigation">
+          <summary>{t('Menu', 'মেনু')} <span aria-hidden="true">☰</span></summary>
+          <nav aria-label={t('Mobile navigation', 'মোবাইল নেভিগেশন')}>
+            {navigation.map(([id, en, bn]) => <a href={`#${id}`}>{t(en, bn)}</a>)}
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main" tabindex="-1"><slot /></main>
+    <footer id="contact" class="site-footer">
+      <div class="wrap footer-top">
+        <div><p class="footer-bn" lang="bn">ঐতিহ্যের সাথে, মানুষের পাশে।</p><h2>{t('Stay in conversation.', 'যোগাযোগ রাখুন।')}</h2><p>{t('For enquiries about the foundation, its heritage material or its activities.', 'ফাউন্ডেশন, ঐতিহ্যবিষয়ক উপকরণ অথবা কার্যক্রম সম্পর্কে জানতে যোগাযোগ করুন।')}</p></div>
+        <div class="contact-details"><a href="mailto:isakhanfoundation@gmail.com">isakhanfoundation@gmail.com</a><a href="tel:+8801819514684">{t('+880 1819 514684', '+৮৮০ ১৮১৯ ৫১৪৬৮৪')}</a><p>{t('Contact details from the supplied foundation material. Current details to be confirmed before launch.', 'সরবরাহকৃত ফাউন্ডেশনের উপকরণ থেকে নেওয়া যোগাযোগের তথ্য। প্রকাশের আগে বর্তমান তথ্য নিশ্চিত করতে হবে।')}</p></div>
+      </div>
+      <div class="wrap footer-bottom"><span>{t('Isha Kha Foundation', 'ঈশা খাঁ ফাউন্ডেশন')}</span><span>{t('Homepage concept · Copy and assets subject to review', 'হোমপেজের প্রস্তাব · লেখা ও উপকরণ পর্যালোচনাধীন')}</span><a href="#main">{t('Back to top', 'শুরুতে ফিরে যান')} ↑</a></div>
+    </footer>
+  </body>
+</html>

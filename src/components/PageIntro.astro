@@ -1,0 +1,10 @@
+---
+import type { Lang } from '../data/concepts';
+import { pages, pathFor } from '../data/site';
+const { lang, slug, title, description } = Astro.props as { lang: Lang; slug: string; title: string; description: string };
+const parent = slug.includes('/') ? pages.find(page => page.slug === slug.split('/')[0]) : undefined;
+---
+<div class="page-intro site-wrap">
+  <nav class="breadcrumbs" aria-label={lang === 'bn' ? 'অবস্থান' : 'Breadcrumb'}><a href={pathFor(lang)}>{lang === 'bn' ? 'হোমপেজ' : 'Home'}</a>{parent && <><span aria-hidden="true">/</span><a href={pathFor(lang, parent.slug)}>{parent.title[lang]}</a></>}<span aria-hidden="true">/</span><span aria-current="page">{title}</span></nav>
+  <h1>{title}</h1><p class="page-deck">{description}</p>
+</div>

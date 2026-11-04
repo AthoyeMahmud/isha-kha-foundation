@@ -1,0 +1,27 @@
+---
+import type { Lang } from '../data/concepts';
+import { reading } from '../data/reading';
+import { pages, groupNames, pathFor } from '../data/site';
+import { Image } from 'astro:assets';
+import jangalbari from '../assets/activities/jangalbari-visit.webp';
+const { lang, slug } = Astro.props as { lang: Lang; slug: string };
+const entry = reading.find(item => item.frontmatter.lang === lang && item.frontmatter.slug === slug);
+if (!entry) throw new Error('Missing reading page: ' + lang + '/' + slug);
+const Content = entry.Content;
+const headings = entry.getHeadings().filter(heading => heading.depth === 2);
+const current = pages.find(page => page.slug === slug)!;
+const related = pages.filter(page => page.group === current.group && page.slug !== slug && page.slug !== 'sitemap');
+const isDocument = slug.startsWith('documents/');
+const t = (en: string, bn: string) => lang === 'bn' ? bn : en;
+---
+<div class="reading-layout site-wrap">
+  <article class="reading-body">
+    {isDocument && <div class="document-download"><a class="button secondary" href={'/downloads/' + lang + '/' + slug.split('/')[1] + '.txt'} download>{t('Download the text reading edition', 'পাঠসংস্করণের টেক্সট ফাইল নামান')}</a><p>{t('UTF-8 text · Editorial summary of the supplied document', 'UTF-8 টেক্সট · সরবরাহকৃত নথির সম্পাদকীয় সারসংক্ষেপ')}</p></div>}
+    {slug === 'heritage/places' && <figure class="record-detail-photo"><Image src={jangalbari} widths={[400,700,1000]} sizes="(max-width: 800px) 88vw, 65vw" alt={t('The chairperson beside a historic building during the foundation’s Jangalbari visit.', 'ফাউন্ডেশনের জঙ্গলবাড়ী সফরে ঐতিহাসিক ভবনের পাশে চেয়ারপারসন।')} format="webp" /><figcaption>{t('From the foundation’s Jangalbari visit record.', 'ফাউন্ডেশনের জঙ্গলবাড়ী সফরের রেকর্ড থেকে।')} <a href={pathFor(lang, 'activities/jangalbari-visit')}>{t('Read the visit record', 'সফরের বিবরণ পড়ুন')}</a></figcaption></figure>}
+    <Content />
+  </article>
+  <aside class="reading-aside" aria-label={t('Reading guide', 'পাঠসহায়িকা')}><h2>{t('On this page', 'এই পৃষ্ঠায়')}</h2><ul>{headings.map(heading => <li><a href={'#' + heading.slug}>{heading.text}</a></li>)}</ul>
+    {related.length > 0 && <><h2 style="margin-top:2rem">{groupNames[current.group][lang]}</h2><ul>{related.map(page => <li><a href={pathFor(lang, page.slug)}>{page.title[lang]}</a></li>)}</ul></>}
+    <p class="aside-note"><a href={pathFor(lang, 'contact')}>{t('Suggest a source or correction', 'তথ্যসূত্র বা সংশোধন জানান')}</a></p>
+  </aside>
+</div>

@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang } from '../data/concepts';
+import { activities } from '../data/foundation';
+import { activityContext } from '../data/activity-details';
+import { pathFor, formatPosted } from '../data/site';
+import jangalbari from '../assets/activities/jangalbari-visit.webp';
+import discussion from '../assets/activities/history-discussion.webp';
+const { lang, entry } = Astro.props as { lang: Lang; entry: typeof activities[number] };
+const t = (en: string, bn: string) => lang === 'bn' ? bn : en;
+const hasDate = entry.eventDate.en !== 'Not yet confirmed';
+const picture = entry.id === 'jangalbari-visit' ? jangalbari : entry.id === 'isa-khan-commemoration' ? discussion : undefined;
+const related = activities.filter(item => item.id !== entry.id).filter(item => entry.id.includes('book') || entry.id === 'university-presentation' ? ['book-presentations', 'university-presentation', 'calendar-distribution'].includes(item.id) : ['jangalbari-visit', 'isa-khan-commemoration', 'history-discussion', 'heritage-rally'].includes(item.id)).slice(0,3);
+---
+<div class="reading-layout site-wrap"><article class="reading-body" data-activity={entry.id}>
+  <dl class="record-facts">{hasDate && <div><dt>{t('Event date', 'অনুষ্ঠানের তারিখ')}</dt><dd>{'eventDateTime' in entry ? <time datetime={entry.eventDateTime}>{entry.eventDate[lang]}</time> : entry.eventDate[lang]}</dd></div>}<div><dt>{t('Post published', 'পোস্ট প্রকাশ')}</dt><dd><time data-posted-at={entry.id} datetime={entry.publishedAt}>{formatPosted(entry.publishedAt, lang, true)}</time> {t('(Dhaka, UTC+06:00)', '(ঢাকা সময়, UTC+06:00)')}</dd></div><div><dt>{t('Source', 'উৎস')}</dt><dd><a href={entry.source}>ISA KHAN FOUNDATION TV</a></dd></div></dl>
+  {picture && <figure class="record-detail-photo"><Image src={picture} widths={[400,700,1000]} sizes="(max-width: 800px) 88vw, 65vw" alt={entry.id === 'jangalbari-visit' ? t('Nasima Sultana Ratna pictured during the Jangalbari heritage visit.', 'জঙ্গলবাড়ী ঐতিহ্য পরিদর্শনে নাসিমা সুলতানা রত্না।') : t('Participants holding books at the Isa Khan commemoration described in the source post.', 'উৎস পোস্টে বর্ণিত ঈশা খাঁ স্মরণানুষ্ঠানে বই হাতে অংশগ্রহণকারীরা।')} format="webp" /><figcaption>{t('Photograph from the original foundation post.', 'ফাউন্ডেশনের মূল পোস্টের আলোকচিত্র।')} <a href={entry.source}>{t('View the source', 'উৎস দেখুন')}</a></figcaption></figure>}
+  <h2>{t('About the record', 'আয়োজনের বিবরণ')}</h2><p>{activityContext[entry.id][lang]}</p>
+  <p class="source-note">{hasDate ? t('The event date follows the original caption or readable photograph. The publication timestamp records when the post appeared.', 'অনুষ্ঠানের তারিখ মূল ক্যাপশন বা পাঠযোগ্য ছবি থেকে নেওয়া। প্রকাশকাল বোঝায় পোস্টটি কখন প্রকাশিত হয়েছে।') : t('The source does not establish an event date for this record. The timestamp above is the post’s publication time.', 'এই রেকর্ডে উৎস থেকে অনুষ্ঠানের তারিখ নির্ধারণ করা যায় না। ওপরে পোস্ট প্রকাশের সময় দেখানো হয়েছে।')} <a href={pathFor(lang, 'sources')}>{t('Read about the date method', 'তারিখের পদ্ধতি পড়ুন')}</a></p>
+  <a class="button" href={entry.source}>{t('Read the original post', 'মূল পোস্ট পড়ুন')}</a>
+</article><aside class="reading-aside"><h2>{t('Related records', 'সম্পর্কিত বিবরণ')}</h2><ul>{related.map(item => <li><a href={pathFor(lang, 'activities/' + item.id)}>{item.title[lang]}</a></li>)}</ul><h2 style="margin-top:2rem">{t('Explore further', 'আরও দেখুন')}</h2><ul><li><a href={pathFor(lang, 'activities')}>{t('All activities', 'সব কার্যক্রম')}</a></li><li><a href={pathFor(lang, 'heritage')}>{t('Heritage and historical references', 'ঐতিহ্য ও ঐতিহাসিক সূত্র')}</a></li><li><a href={pathFor(lang, 'publications')}>{t('Publications', 'প্রকাশনা')}</a></li></ul></aside></div>

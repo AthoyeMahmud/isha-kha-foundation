@@ -1,0 +1,7 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import SiteHome from '../components/SiteHome.astro';
+import { pages } from '../data/site';
+const meta = pages[0];
+---
+<SiteLayout lang="en" title={meta.title.en} description={meta.description.en}><SiteHome lang="en" /></SiteLayout>

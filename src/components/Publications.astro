@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang } from '../data/concepts';
+import socialBook from '../assets/activities/social-decline-publication.webp';
+import democracyBook from '../assets/activities/democracy-publication.webp';
+const { lang = 'en' } = Astro.props as { lang: Lang };
+const t = (en: string, bn: string) => lang === 'bn' ? bn : en;
+const publicationPost = 'https://www.youtube.com/post/UgkxAXMFfA3SGy6eO6maNAleCjixETzmuV-e';
+---
+<section id="publications" class="publications wrap" aria-labelledby="publications-title">
+  <div class="publication-copy"><p class="publication-label">{t('Publications & reading', 'প্রকাশনা ও পাঠ')}</p><h2 id="publications-title">{t('Ideas carried through books.', 'বইয়ের পাতায় ভাবনার বিস্তার।')}</h2>
+    <article><h3>{t('Isa Khan and his descendants', 'ঈশা খাঁ ও তাঁর বংশধর')}</h3><p>{t('The channel records the publication and presentation of a book about Isa Khan and his descendants. It is a starting point for understanding the foundation’s own account of this legacy.', 'চ্যানেলে ঈশা খাঁ ও তাঁর বংশধরবিষয়ক গ্রন্থ প্রকাশ ও উপহার দেওয়ার কথা আছে। ফাউন্ডেশনের দৃষ্টিতে এই উত্তরাধিকার জানার একটি সূত্র এই প্রকাশনা।')}</p><a href="https://www.youtube.com/post/UgkxBJOzLsUM5szNoL4DQzI7A3Vx0WLu1JxH">{t('View the publication post', 'প্রকাশনার পোস্ট দেখুন')} ↗</a></article>
+    <article><h3>{t('Writing on society and democracy', 'সমাজ ও গণতন্ত্রবিষয়ক রচনা')}</h3><p>{t('The foundation also shows books on society and democracy. The photographed covers credit Nasima Sultana (Ratna). Full bibliographic details will be added after checking the editions.', 'ফাউন্ডেশন সমাজ ও গণতন্ত্রবিষয়ক বইয়ের ছবিও প্রকাশ করেছে। প্রচ্ছদে লেখক হিসেবে নাসিমা সুলতানা (রত্না)-র নাম রয়েছে। সংস্করণ যাচাই করে পূর্ণ গ্রন্থতথ্য যুক্ত করা হবে।')}</p><a href={publicationPost}>{t('View the photographed covers', 'প্রচ্ছদের ছবির উৎস দেখুন')} ↗</a></article>
+  </div>
+  <div class="publication-covers">
+    <figure><Image src={socialBook} widths={[240, 480]} sizes="(max-width: 700px) 42vw, 240px" alt={t('A photographed cover titled Causes and Remedies of Social Decline in Bangla, credited to Nasima Sultana Ratna, with the channel’s publication caption overlaid.', 'নাসিমা সুলতানা (রত্না)-র সমাজের অবক্ষয়ের কারণ ও প্রতিকার বইয়ের প্রচ্ছদের আলোকচিত্র; ওপরে চ্যানেলের প্রকাশনাবিষয়ক লেখা রয়েছে।')} format="webp" /><figcaption lang="bn">সমাজের অবক্ষয়ের কারণ ও প্রতিকার</figcaption></figure>
+    <figure><Image src={democracyBook} widths={[240, 480]} sizes="(max-width: 700px) 42vw, 240px" alt={t('A green photographed book cover on democracy, credited to Nasima Sultana Ratna.', 'গণতন্ত্রবিষয়ক সবুজ রঙের বইয়ের প্রচ্ছদের আলোকচিত্র; লেখক নাসিমা সুলতানা (রত্না)।')} format="webp" /><figcaption>{t('Writing on democracy', 'গণতন্ত্রবিষয়ক গ্রন্থ')}</figcaption></figure>
+    <p class="cover-credit">{t('Cover photographs: ISA KHAN FOUNDATION TV. Catalogue details pending review.', 'প্রচ্ছদের আলোকচিত্র: ISA KHAN FOUNDATION TV। পূর্ণ গ্রন্থতথ্য পর্যালোচনাধীন।')}</p>
+  </div>
+</section>
+<style>
+.publications { display: grid; grid-template-columns: 1fr 1fr; gap: 8%; padding-block: 4.5rem; border-top: 1px solid var(--line); }
+.publication-label { color: var(--copper); font-size: .8rem; margin-bottom: 1rem; }
+h2 { font-size: clamp(2rem, 3vw, 3rem); line-height: 1.4; margin-bottom: 2rem; }
+article + article { margin-top: 1.8rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+h3 { font-size: 1.4rem; line-height: 1.4; margin-bottom: .7rem; }
+article p { font-size: .86rem; line-height: 1.9; color: var(--muted); }
+article a { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; margin-top: .5rem; }
+.publication-covers { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-content: center; min-width: 0; }
+figure { margin: 0; min-width: 0; }
+img { display: block; width: 100%; height: auto; background: var(--paper); }
+figcaption { font-size: .77rem; line-height: 1.8; margin-top: .8rem; }
+.cover-credit { grid-column: 1 / -1; color: var(--muted); font-size: .72rem; }
+@media (max-width: 700px) { .publications { grid-template-columns: 1fr; gap: 2.5rem; padding-block: 3rem; } }
+</style>

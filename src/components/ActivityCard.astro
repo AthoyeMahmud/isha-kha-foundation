@@ -1,0 +1,13 @@
+---
+import type { Lang } from '../data/concepts';
+import { activities } from '../data/foundation';
+import { formatPosted, pathFor } from '../data/site';
+const { lang, entry } = Astro.props as { lang: Lang; entry: typeof activities[number] };
+const t = (en: string, bn: string) => lang === 'bn' ? bn : en;
+---
+<article class="activity-card" data-activity={entry.id}>
+  <p class="record-date">{t('Posted', 'পোস্ট প্রকাশ')} <time data-posted-at={entry.id} datetime={entry.publishedAt}>{formatPosted(entry.publishedAt, lang)}</time></p>
+  <h3><a href={pathFor(lang, 'activities/' + entry.id)}>{entry.title[lang]}</a></h3>
+  <p>{entry.description[lang]}</p>
+  <a class="text-link" href={pathFor(lang, 'activities/' + entry.id)} aria-label={t('Read the record: ', 'বিবরণ পড়ুন: ') + entry.title[lang]}>{t('Read the record', 'বিবরণ পড়ুন')}</a>
+</article>
